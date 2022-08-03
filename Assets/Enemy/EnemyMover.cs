@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyMover : MonoBehaviour
 {
     [SerializeField] List<WayPoint> path = new List<WayPoint>();
-    [SerializeField] float waitTime = 1f;
+    [SerializeField] [Range(0f, 5f)] float speed = 1f;
     
     void Start()
     {
@@ -22,11 +22,29 @@ public class EnemyMover : MonoBehaviour
     {
         foreach (WayPoint wayPoint in path)
         {
-            transform.position = wayPoint.transform.position;
+            Vector3 startPosition = transform.position;
+            Vector3 endPosition = wayPoint.transform.position;
+            // between 0 and 1
+            float travelPercent = 0f;
+
+            // Always going to be facing the waypoint that we are heading towards
+            transform.LookAt(endPosition);
+
+            // so while we are not at our end position (1f)
+            while (travelPercent < 1f)
+            {
+                // LERP: Linear Interpolation --> Enemy is jumping to tile, we want smth that's a bit smoother and moves between the tiles over conseculative frames
+                // We ll use Vector3.LERP(startPosition, endPosition, travelPercent)
+                travelPercent += Time.deltaTime * speed;
+                transform.position = Vector3.Lerp(startPosition, endPosition, travelPercent);
+                yield return new WaitForEndOfFrame();
+            }
+
+            // transform.position = wayPoint.transform.position;
             // You use a yield return statement to return each element one at a time.
             // If we didn't want to return anything at all, we could return null but we want to delay
             // give up control and than come back to me in 1 second.
-            yield return new WaitForSeconds(waitTime);
+            // yield return new WaitForSeconds(waitTime);
         }
     }
 }

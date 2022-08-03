@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class WayPoint : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] bool isPlaceble; //flag
+    [SerializeField] GameObject towerPrefab;
+ 
+    // OnMouseDown is called when the user has pressed the mouse button while over the Collider.
+    void OnMouseDown() 
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        if (isPlaceble)
+        {
+            Instantiate(towerPrefab, transform.position, Quaternion.identity);
+            isPlaceble = false; // we don't wanna more than one tower on sama tile
+        }
         
     }
 }
