@@ -7,13 +7,36 @@ public class EnemyMover : MonoBehaviour
     [SerializeField] List<WayPoint> path = new List<WayPoint>();
     [SerializeField] [Range(0f, 5f)] float speed = 1f;
     
-    void Start()
+    // This function is called when the object becomes enabled and active.
+    void OnEnable()
     {
         // Invokes the method methodName in time seconds, then repeatedly every repeatRate seconds.
         // InvokeRepeating("FollowPath", 0, 1f);
 
+        FindPath();
+        ReturnTostart();
         // A coroutine is a method that you declare with an IEnumerator return type and with a yield return statement included somewhere in the body. The yield return nullline is the point where execution pauses and resumes in the following frame. To set a coroutine running, you need to use the StartCoroutine function (we need to call our coroutine)
         StartCoroutine(FollowPath());
+    }
+
+    void FindPath()
+    {
+        // This method removes all elements from the list
+        path.Clear();
+
+        // we use array, cause more than one
+        GameObject[] waypoints = GameObject.FindGameObjectsWithTag("Path");
+
+        foreach (GameObject waypoint in waypoints)
+        {
+            // add an obj to the list
+            path.Add(waypoint.GetComponent<WayPoint>());
+        }
+    }
+    
+    void ReturnTostart()
+    {
+        transform.position = path[0].transform.position;
     }
 
     // IEnumerator: Supports a simple iteration over a non-generic collection.
@@ -37,14 +60,16 @@ public class EnemyMover : MonoBehaviour
                 // We ll use Vector3.LERP(startPosition, endPosition, travelPercent)
                 travelPercent += Time.deltaTime * speed;
                 transform.position = Vector3.Lerp(startPosition, endPosition, travelPercent);
+                // Waits until the end of the frame after Unity has rendererd every Camera and GUI, just before displaying the frame on screen.
                 yield return new WaitForEndOfFrame();
             }
-
             // transform.position = wayPoint.transform.position;
             // You use a yield return statement to return each element one at a time.
             // If we didn't want to return anything at all, we could return null but we want to delay
             // give up control and than come back to me in 1 second.
             // yield return new WaitForSeconds(waitTime);
         }
+
+        gameObject.SetActive(false);
     }
 }
