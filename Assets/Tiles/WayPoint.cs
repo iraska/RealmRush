@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WayPoint : MonoBehaviour
 {
-    [SerializeField] GameObject towerPrefab;
+    [SerializeField] Tower towerPrefab;
     
     [SerializeField] bool isPlaceable; //flag
     public bool IsPlaceable { get { return isPlaceable; } } // making more visible
@@ -14,9 +14,10 @@ public class WayPoint : MonoBehaviour
     {
         if (isPlaceable)
         {
+            bool isPlaced = towerPrefab.CreateTower(towerPrefab, transform.position);
             // This function makes a copy of an object in a similar way to the Duplicate command in the editor.
-            Instantiate(towerPrefab, transform.position, Quaternion.identity);
-            isPlaceable = false; // we don't wanna more than one tower on sama tile
+            // Instantiate(towerPrefab, transform.position, Quaternion.identity);
+            isPlaceable = !isPlaced; // we don't wanna more than one tower on sama tile
         }
         
     }

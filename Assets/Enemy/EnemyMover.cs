@@ -6,6 +6,8 @@ public class EnemyMover : MonoBehaviour
 {
     [SerializeField] List<WayPoint> path = new List<WayPoint>();
     [SerializeField] [Range(0f, 5f)] float speed = 1f;
+
+    Enemy enemy;
     
     // This function is called when the object becomes enabled and active.
     void OnEnable()
@@ -17,6 +19,11 @@ public class EnemyMover : MonoBehaviour
         ReturnTostart();
         // A coroutine is a method that you declare with an IEnumerator return type and with a yield return statement included somewhere in the body. The yield return nullline is the point where execution pauses and resumes in the following frame. To set a coroutine running, you need to use the StartCoroutine function (we need to call our coroutine)
         StartCoroutine(FollowPath());
+    }
+
+    void Start() 
+    {
+        enemy = GetComponent<Enemy>();
     }
 
     void FindPath()
@@ -70,6 +77,7 @@ public class EnemyMover : MonoBehaviour
             // yield return new WaitForSeconds(waitTime);
         }
 
+        enemy.StealGold();
         gameObject.SetActive(false);
     }
 }
