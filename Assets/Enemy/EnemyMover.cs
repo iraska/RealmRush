@@ -32,7 +32,6 @@ public class EnemyMover : MonoBehaviour
         // This method removes all elements from the list
         path.Clear();
 
-        // we use array, cause more than one
         GameObject parent = GameObject.FindGameObjectWithTag("Path");
 
         foreach (Transform child in parent.transform)
@@ -82,7 +81,6 @@ public class EnemyMover : MonoBehaviour
                 // Waits until the end of the frame after Unity has rendererd every Camera and GUI, just before displaying the frame on screen.
                 yield return new WaitForEndOfFrame();
             }
-            // transform.position = wayPoint.transform.position;
             // You use a yield return statement to return each element one at a time.
             // If we didn't want to return anything at all, we could return null but we want to delay
             // give up control and than come back to me in 1 second.

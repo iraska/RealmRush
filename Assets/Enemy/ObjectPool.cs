@@ -7,8 +7,7 @@ public class ObjectPool : MonoBehaviour
     // Use coroutine
 
     [SerializeField] GameObject enemyPrefab;
-    // 5 enemies in a object pool
-    [SerializeField] [Range(0, 50)] int poolSize = 5;
+    [SerializeField] [Range(0, 50)] int poolSize = 5; // 5 enemies in a object pool
     [SerializeField] [Range(0.1f, 30f)] float spawnTimer = 1f;
 
     GameObject[] pool;
@@ -30,7 +29,7 @@ public class ObjectPool : MonoBehaviour
 
         for (int i = 0; i < pool.Length; i++)
         {
-            pool[i] = Instantiate(enemyPrefab, transform);
+            pool[i] = Instantiate(enemyPrefab, transform); // clone enemy
             pool[i].SetActive(false);
         }
     }
