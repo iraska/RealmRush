@@ -9,10 +9,22 @@ public class GridManager : MonoBehaviour
 
     // Create a dictionay; our key is coordinates so it's Vector2Int, in case value is node and dicionary name is grid
     Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
+    public Dictionary<Vector2Int, Node> Grid { get { return grid; } }
 
     void Awake() 
     {
         CreateGrid();
+    }
+
+// We can access elements within our grid, we can use our GetNode method
+    public Node GetNode(Vector2Int coordinates)
+    {
+        if (grid.ContainsKey(coordinates))
+        {
+            return grid[coordinates];
+        }
+
+        return null;
     }
 
     void CreateGrid()
@@ -23,7 +35,6 @@ public class GridManager : MonoBehaviour
             {
                 Vector2Int coordinates = new Vector2Int(x,y);
                 grid.Add(coordinates, new Node(coordinates, true)); // true: always walkable
-                Debug.Log(grid[coordinates].coordinates + " = " + grid[coordinates].isWalkable);
             }
         }
     }

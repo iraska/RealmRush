@@ -12,18 +12,22 @@ public class CoordinateLabeler : MonoBehaviour
 {
     [SerializeField] Color defaultColor = Color.white;
     [SerializeField] Color blockedColor = Color.black;
+    [SerializeField] Color exploredtColor = Color.yellow;
+    [SerializeField] Color pathColor = new Color(1f, 0.5f, 0f); // red, green, blue --> orange
 
     TextMeshPro label;
     // We're in a 3D word, (x, z) should be an integer 
     Vector2Int coordinates = new Vector2Int();
-    WayPoint wayPoint;
+    //WayPoint wayPoint;
+    GridManager gridManager;
 
     void Awake() 
     {
+        gridManager = FindObjectOfType<GridManager>(); // gridManager does exist in our world
         label = GetComponent<TextMeshPro>();
         label.enabled = false;
 
-        wayPoint = GetComponentInParent<WayPoint>();
+        //wayPoint = GetComponentInParent<WayPoint>();
         DisplayCoordinates();
     }
 
@@ -34,7 +38,7 @@ public class CoordinateLabeler : MonoBehaviour
         {
             DisplayCoordinates();
             UpdateObjectName();
-            //label.enabled = true;
+            label.enabled = true;
         }
 
         SetLabelColor();
@@ -52,14 +56,40 @@ public class CoordinateLabeler : MonoBehaviour
 
     void SetLabelColor()
     {
-        if (wayPoint.IsPlaceable)
-        {
-            label.color = defaultColor;
-        }
-        else
+        if (gridManager == null) { return; }
+
+        Node node = gridManager.GetNode(coordinates);
+
+        if (node == null) { return; }
+
+        if (!node.isWalkable)
         {
             label.color = blockedColor;
         }
+
+        else if (node.isPath)
+        {
+            label.color = pathColor;
+        }
+
+        else if (node.isExplored)
+        {
+            label.color = exploredtColor;
+        }
+
+        else
+        {
+            label.color = defaultColor;
+        }
+
+        // if (wayPoint.IsPlaceable)
+        // {
+        //     label.color = defaultColor;
+        // }
+        // else
+        // {
+        //     label.color = blockedColor;
+        // }
     }
 
     void DisplayCoordinates()
