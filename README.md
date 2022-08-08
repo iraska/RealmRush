@@ -7,7 +7,7 @@ I developed this project using C# with Unity.
 
 
 ## General Info
-This project which a kind of tower defense game you need to check your bank account! The enemies are determined to drain your bank account and you must make strategic moves to stop them. You can place your weapons with the use of Mouse. Remember, when each enemy die born to much stronger. Do not be distracted by the enchanted trees. 
+This project which a kind of tower defense game you need to check your bank account! The enemies are determined to drain your bank account and you must make strategic moves to stop them. You can place your weapons with the use of Mouse and each weapon will cost you 75 coins. Remember, when each enemy die born to much stronger. Do not be distracted by the enchanted trees. 
 
 ![1111](https://user-images.githubusercontent.com/105501017/183439375-fcedf243-5f84-4364-ac91-43cea42a5862.PNG)
 
