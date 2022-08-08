@@ -94,12 +94,14 @@ public class CoordinateLabeler : MonoBehaviour
 
     void DisplayCoordinates()
     {
+        if (gridManager == null) { return; }
+
         // This script is on a child our Tile object (text)
         // float to int
         // Grid's widh-height are 10 (x, z)
-        coordinates.x = Mathf.RoundToInt(transform.parent.position.x / UnityEditor.EditorSnapSettings.move.x);
+        coordinates.x = Mathf.RoundToInt(transform.parent.position.x / gridManager.UnityGridSize);
         // This is actually going to be the z coordinate of our object, cause we working in the 2d (x, z) plane.
-        coordinates.y = Mathf.RoundToInt(transform.parent.position.z / UnityEditor.EditorSnapSettings.move.z);
+        coordinates.y = Mathf.RoundToInt(transform.parent.position.z / gridManager.UnityGridSize);
 
         label.text = coordinates.x + "," + coordinates.y;
     }

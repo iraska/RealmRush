@@ -5,50 +5,56 @@ using UnityEngine;
 [RequireComponent(typeof(Enemy))]
 public class EnemyMover : MonoBehaviour
 {
-    [SerializeField] List<WayPoint> path = new List<WayPoint>();
     [SerializeField] [Range(0f, 5f)] float speed = 1f;
 
+    List<Node> path = new List<Node>();
+
     Enemy enemy;
-    
+    GridManager gridManager;
+    PathFinder pathFinder;
+
     // This function is called when the object becomes enabled and active.
     void OnEnable()
     {
         // Invokes the method methodName in time seconds, then repeatedly every repeatRate seconds.
         // InvokeRepeating("FollowPath", 0, 1f);
 
-        FindPath();
         ReturnTostart();
-        // A coroutine is a method that you declare with an IEnumerator return type and with a yield return statement included somewhere in the body. The yield return nullline is the point where execution pauses and resumes in the following frame. To set a coroutine running, you need to use the StartCoroutine function (we need to call our coroutine)
-        StartCoroutine(FollowPath());
+        RecalculatePath(true);
     }
 
-    void Start() 
+    void Awake() 
     {
         enemy = GetComponent<Enemy>();
+        gridManager = FindObjectOfType<GridManager>();
+        pathFinder = FindObjectOfType<PathFinder>();
     }
 
-    void FindPath()
+    void RecalculatePath(bool resetPath)
     {
+        Vector2Int coordinates = new Vector2Int();
+
+        if (resetPath)
+        {
+            coordinates = pathFinder.StartCoordinates;
+        }
+
+        else
+        {
+            coordinates = gridManager.GetCoordinatesFromPosition(transform.position);   //current transform.position
+        }
+
+        StopAllCoroutines();
         // This method removes all elements from the list
         path.Clear();
-
-        GameObject parent = GameObject.FindGameObjectWithTag("Path");
-
-        foreach (Transform child in parent.transform)
-        {
-            WayPoint wayPoint = child.GetComponent<WayPoint>();
-            if (wayPoint != null)
-            {
-                // add an obj to the list
-                path.Add(wayPoint);
-            }
-            
-        }
+        path = pathFinder.GetNewPath(coordinates);
+        // A coroutine is a method that you declare with an IEnumerator return type and with a yield return statement included somewhere in the body. The yield return nullline is the point where execution pauses and resumes in the following frame. To set a coroutine running, you need to use the StartCoroutine function (we need to call our coroutine)
+        StartCoroutine(FollowPath());
     }
     
     void ReturnTostart()
     {
-        transform.position = path[0].transform.position;
+        transform.position = gridManager.GetPositionFromCoordinates(pathFinder.StartCoordinates);
     }
 
     void FinishPath()
@@ -61,10 +67,10 @@ public class EnemyMover : MonoBehaviour
     // returning smth countable that the system can use
     IEnumerator FollowPath()
     {
-        foreach (WayPoint wayPoint in path)
+        for (int i = 1; i < path.Count; i++)    // if int i = 0: when we get a new path, we're heading back to the very first node in our current path (slow)
         {
             Vector3 startPosition = transform.position;
-            Vector3 endPosition = wayPoint.transform.position;
+            Vector3 endPosition = gridManager.GetPositionFromCoordinates(path[i].coordinates);
             // between 0 and 1
             float travelPercent = 0f;
 
